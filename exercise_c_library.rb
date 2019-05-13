@@ -12,6 +12,7 @@
 #     }
 #   }
 #
+
 # Create a getter for the books
 
 # Create a method that takes in a book title and returns all of the information about that book.
@@ -24,55 +25,74 @@
 
 class Library
 
-  attr_reader :book_titles, :books
-  def initialize(books)
-    @books = books
-    @book_titles = []
-
-    for book in books
-      @book_titles.push(book[:title])
-    end
+  attr_reader :book_list
+  def initialize(book_list)
+    @book_list = book_list
   end
 
-  def book_details(book_name)
-    if book_titles.include?(book_name)
-      for book in @books
-        return book if book_name == book[:title]
+  def titles
+    result = []
+    for book in @book_list
+      result.push(book.details[:title])
+    end
+    return result
+  end
+
+  def info(book_name)
+    if titles.include?(book_name)
+      for book in @book_list
+        return book.details if book_name == book.title
       end
     end
     return nil
   end
 
   def rental_details(book_name)
-    if book_titles.include?(book_name)
-      for book in @books
-        return book[:rental_details] if book_name == book[:title]
+    if titles.include?(book_name)
+      for book in @book_list
+        return book.details[:rental_details] if book_name == book.title
       end
     end
     return nil
   end
 
-  def add_book(book_name)
-    @books.push(
-      {
-      title: book_name,
-      rental_details: {
-        student_name: "",
-        date: ""
-      }
-      } )
+  def add_book(new_book)
+    @book_list.push(Book.new(new_book))
   end
 
-  def amend_rental(book_name, student, date)
-    if book_titles.include?(book_name)
-      for book in @books
-        if book_name = book[:title]
-          book[:rental_details][:student] = student
-          book[:rental_details][:date] = date
+  def change_rental_details(book_name, name, date)
+    if titles.include?(book_name)
+      for book in @book_list
+        if book.title == book_name
+          book.student_name = name
+          book.date = date
         end
       end
     end
     return nil
+  end
+
+end
+
+
+class Book
+
+  attr_reader :title
+  attr_accessor :student_name, :date
+  def initialize(title, student_name = "", date = "")
+    @title = title
+    @student_name = student_name
+    @date = date
+  end
+
+  def details
+    return {
+      title: @title,
+      rental_details: {
+        student_name: @student_name,
+        date: @date
+      }
+    }
   end
 
 end

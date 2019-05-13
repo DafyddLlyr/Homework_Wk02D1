@@ -12,6 +12,7 @@
 #     }
 #   }
 #
+
 # Create a getter for the books
 
 # Create a method that takes in a book title and returns all of the information about that book.
@@ -27,68 +28,78 @@ require("minitest/rg")
 require_relative("../exercise_c_library")
 require("Pry")
 
+class TestBook < MiniTest::Test
+
+  def setup
+    @my_book = Book.new("lord_of_the_rings", "Jeff", "01/12/16")
+  end
+
+  def test_details
+    test_hash = {
+      title: "lord_of_the_rings",
+      rental_details: {
+        student_name: "Jeff",
+        date: "01/12/16"
+        }
+      }
+  end
+
+end
+
+
 class TestLibrary < MiniTest::Test
 
   def setup
-    @test_library = Library.new(
-      [{
-        title: "lord_of_the_rings",
-        rental_details: {
-         student_name: "Jeff",
-         date: "01/12/16"
-        }
-      },
-      {
-        title: "the_hobbit",
-        rental_details: {
-         student_name: "Annie",
-         date: "18/02/14"
-        }
-      },
-      {
-        title: "the_silmarillion",
-        rental_details: {
-         student_name: "Shirley",
-         date: "12/12/12"
-        }
-      }]
+    @my_lib = Library.new(
+      [
+        Book.new("lord_of_the_rings", "Jeff", "01/12/16"),
+        Book.new("the_hobbit", "Annie", "18/02/16"),
+        Book.new("the_silmarillion", "Shirley", "12/12/12")
+      ]
     )
   end
 
-  def test_get_books
-    assert_equal(["lord_of_the_rings", "the_hobbit", "the_silmarillion"], @test_library.book_titles)
+  def test_titles
+    assert_equal(["lord_of_the_rings", "the_hobbit", "the_silmarillion"], @my_lib.titles)
   end
 
-  def test_book_details__found
-    assert_equal(@test_library.books[0], @test_library.book_details("lord_of_the_rings"))
+  def test_info__found
+    assert_equal(
+        {
+          title: "lord_of_the_rings",
+          rental_details: {
+           student_name: "Jeff",
+           date: "01/12/16"
+          }
+        },
+        @my_lib.info("lord_of_the_rings"))
   end
 
-  def test_book_details__not_found
-    assert_nil(@test_library.book_details("a game of thrones"))
+  def test_info__not_found
+    assert_nil(@my_lib.info("a_game_of_thrones"))
   end
 
   def test_rental_details__found
-    assert_equal(@test_library.books[0][:rental_details], @test_library.rental_details("lord_of_the_rings"))
+    assert_equal({student_name: "Jeff", date: "01/12/16"}, @my_lib.rental_details("lord_of_the_rings"))
   end
 
   def test_rental_details__not_found
-    assert_nil(@test_library.rental_details("a game of thrones"))
+    assert_nil(@my_lib.rental_details("a_game_of_thrones"))
   end
 
   def test_add_book
-    @test_library.add_book("a game of thrones")
-    assert_equal(4, @test_library.books.length)
+    @my_lib.add_book("a_game_of_thrones")
+    assert_equal(4, @my_lib.titles.length)
   end
 
-  def test_amend_rental__found
-    @test_library.amend_rental("lord_of_the_rings", "Dafydd", "01/01/19")
-    assert_equal(@test_library.books[0][:rental_details], @test_library.rental_details("lord_of_the_rings"))
+  def test_change_rental_details__found
+    @my_lib.change_rental_details("lord_of_the_rings", "Dafydd", "12/12/12")
+    assert_equal({student_name: "Dafydd", date: "12/12/12"}, @my_lib.rental_details("lord_of_the_rings"))
   end
 
-  def test_amend_rental__not_found
-    assert_nil(@test_library.amend_rental("a game of thrones", "Dafydd", "01/01/19"))
+  def test_change_rental_details__not_found
+    @my_lib.change_rental_details("a_game_of_thrones", "Dafydd", "12/12/12")
+    assert_nil(@my_lib.rental_details("a_game_of_thrones"))
   end
-
-
 
 end
