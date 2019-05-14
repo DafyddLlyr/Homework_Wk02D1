@@ -45,7 +45,7 @@ class TestSportsTeam < MiniTest::Test
 
   def test_add_player
     @test_team.add_player("Spider-Man")
-    assert_equal(7, @test_team.players.length) #Have I really checked Spiderman has been added?
+    assert_equal(["Ironman", "Hulk", "Captain America", "Black Widow", "Thor", "Hawkeye", "Spider-Man"], @test_team.players)
   end
 
   def test_include_player__true

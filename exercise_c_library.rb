@@ -39,21 +39,15 @@ class Library
   end
 
   def info(book_name)
-    if titles.include?(book_name)
-      for book in @book_list
-        return book.details if book_name == book.title
-      end
+    for book in @book_list
+      return book.details if book_name == book.title
     end
     return nil
   end
 
   def rental_details(book_name)
-    if titles.include?(book_name)
-      for book in @book_list
-        return book.details[:rental_details] if book_name == book.title
-      end
-    end
-    return nil
+    book = info(book_name)
+    return book[:rental_details] if book != nil
   end
 
   def add_book(new_book)
@@ -61,12 +55,10 @@ class Library
   end
 
   def change_rental_details(book_name, name, date)
-    if titles.include?(book_name)
-      for book in @book_list
-        if book.title == book_name
-          book.student_name = name
-          book.date = date
-        end
+    for book in @book_list
+      if book.title == book_name
+        book.student_name = name
+        book.date = date
       end
     end
     return nil

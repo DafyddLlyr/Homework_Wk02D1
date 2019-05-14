@@ -32,7 +32,7 @@ class SportsTeam
   end
 
   def include_player?(player)
-    @players.include?(player)
+    return @players.include?(player)
   end
 
   def play_game(result)
