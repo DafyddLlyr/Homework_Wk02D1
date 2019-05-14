@@ -42,6 +42,7 @@ class TestBook < MiniTest::Test
         date: "01/12/16"
         }
       }
+      assert_equal(test_hash, @my_book.details)
   end
 
 end
